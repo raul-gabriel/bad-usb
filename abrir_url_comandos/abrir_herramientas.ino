@@ -2,7 +2,7 @@
 
 // --- Ajustá esto si en tu PC target falla ---
 const int DELAY_TECLA = 3;   // ms entre press/release de cada tecla del numpad
-const int DELAY_ALT   = 3;   // ms extra antes de soltar Alt
+const int DELAY_ALT   = 4;   // ms extra antes de soltar Alt
 // ---------------------------------------------
 
 void altChar(int code) {
@@ -19,12 +19,33 @@ void altChar(int code) {
   }
   delay(DELAY_ALT);
   Keyboard.release(KEY_LEFT_ALT);
+  delay(2); // respiro entre caracteres, ayuda en RDP/VM
 }
+
+// Decodifica UTF-8 (solo hasta 2 bytes, cubre á é í ó ú ñ ¿ ¡ ü y sus mayúsculas)
+int nextCodepoint(const char* texto, int &i) {
+  unsigned char c = texto[i];
+  if (c < 0x80) {                       // ASCII normal
+    i += 1;
+    return c;
+  } else if ((c & 0xE0) == 0xC0) {      // 2 bytes -> Latin-1 Supplement
+    unsigned char c2 = texto[i+1];
+    int cp = ((c & 0x1F) << 6) | (c2 & 0x3F);
+    i += 2;
+    return cp;                          // coincide con cp1252 para estos casos
+  } else {
+    i += 1;                             // byte raro, lo salteamos
+    return -1;
+  }
+}
+
 
 // Función lista para reusar: escribe cualquier texto, cualquier teclado
 void escribirUniversal(const char* texto) {
-  for (int i = 0; texto[i] != '\0'; i++) {
-    altChar((int)texto[i]);
+  int i = 0;
+  while (texto[i] != '\0') {
+    int cp = nextCodepoint(texto, i);
+    if (cp > 0) altChar(cp);
   }
 }
 
@@ -47,12 +68,9 @@ void setup() {
   // las instrucciones empiezan aqui======================
   escribirUniversal("notepad");
   enter();  //abrir notepad
-  delay(500);
-  escribirUniversal("Fuiste hackeado jajajajj --hack-gris-- ");
- 
-  
+  delay(800);
+  escribirUniversal("hola te saludo buenos dias ------(---);   ");
 
-  delay(1000);
 
   //============== termina aqui ===========================
   Keyboard.end();

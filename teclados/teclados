@@ -1,0 +1,10 @@
+Keyboard.begin(KeyboardLayout_es_ES);   // España
+Keyboard.begin(KeyboardLayout_en_US);   // Inglés US
+Keyboard.begin(KeyboardLayout_pt_BR);   // Portugués Brasil
+Keyboard.begin(KeyboardLayout_pt_PT);   // Portugués Portugal
+Keyboard.begin(KeyboardLayout_de_DE);   // Alemán
+Keyboard.begin(KeyboardLayout_fr_FR);   // Francés
+Keyboard.begin(KeyboardLayout_it_IT);   // Italiano
+Keyboard.begin(KeyboardLayout_sv_SE);   // Sueco
+Keyboard.begin(KeyboardLayout_da_DK);   // Danés
+Keyboard.begin(KeyboardLayout_hu_HU);   // Húngaro
